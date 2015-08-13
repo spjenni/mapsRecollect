@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='utf-8'?>
+<epm xmlns='http://eprints.org/ep2/data/2.0' id='http://eprints.example.my:8081/id/epm/mapsRecollect'>
+  <epmid>mapsRecollect</epmid>
+  <uri>http://eprints.example.my:8081/id/epm/mapsRecollect</uri>
+  <documents>
+    <document>
+      <files>
+        <file>
+          <datasetid>document</datasetid>
+          <filename>epm/mapsRecollect/cfg/cfg.d/z_maps.pl</filename>
+          <mime_type>text/html</mime_type>
+          <hash>e895f33f2b30434edf5b2d594a09c0a5</hash>
+          <hash_type>MD5</hash_type>
+          <filesize>1612</filesize>
+        </file>
+        <file>
+          <datasetid>document</datasetid>
+          <filename>epm/mapsRecollect/cgi/MapView</filename>
+          <mime_type>text/plain</mime_type>
+          <hash>60dd5678e213e467bef83f050f3e48eb</hash>
+          <hash_type>MD5</hash_type>
+          <filesize>2998</filesize>
+        </file>
+        <file>
+          <datasetid>document</datasetid>
+          <filename>lang/en/phrases/maps.xml</filename>
+          <mime_type>application/xml</mime_type>
+          <hash>b74334b04f42651ebe99686cac911640</hash>
+          <hash_type>MD5</hash_type>
+          <filesize>503</filesize>
+        </file>
+        <file>
+          <datasetid>document</datasetid>
+          <filename>plugins/EPrints/Plugin/InputForm/Surround/Map_surround.pm</filename>
+          <mime_type>text/plain</mime_type>
+          <hash>2915c925a90058b56abd93ef2d00c9a0</hash>
+          <hash_type>MD5</hash_type>
+          <filesize>7555</filesize>
+        </file>
+        <file>
+          <datasetid>document</datasetid>
+          <filename>static/javascript/auto/99_location_gmap.js</filename>
+          <mime_type>text/plain</mime_type>
+          <hash>73ca0c8b83ab8c035a94bf4a3e00398d</hash>
+          <hash_type>MD5</hash_type>
+          <filesize>42090</filesize>
+        </file>
+        <file>
+          <datasetid>document</datasetid>
+          <filename>static/style/auto/z_maps_location.css</filename>
+          <mime_type>text/plain</mime_type>
+          <hash>c2de6811722289bd1220976ae2f77056</hash>
+          <hash_type>MD5</hash_type>
+          <filesize>6400</filesize>
+        </file>
+      </files>
+      <mime_type>text/plain</mime_type>
+      <format>other</format>
+      <main>static/style/auto/z_maps_location.css</main>
+      <content>install</content>
+    </document>
+  </documents>
+  <version>1.0.1</version>
+  <creators>
+    <item>
+      <name>
+        <family>Jennings</family>
+        <given>Simon</given>
+      </name>
+      <id>simon.jennings@lshtm.ac.uk</id>
+    </item>
+  </creators>
+  <datestamp>2015-08-13 09:01:19</datestamp>
+  <title>Google Maps for Recollect</title>
+  <description>This is a JavaScript plugin which allows depositors to draw a bounding rectangle using google maps to define the recollect geolocation field.
+
+The map autcompletes the field and therefore the deposit form must be saved to save the location changes.</description>
+  <requirements>A pin must be placed on the home screen to display the map viewer.
+
+For the deposit workflow:
+&lt;component surround=&quot;Map_surround&quot; collapse=&quot;no&quot;&gt;
+      &lt;title&gt;Geographic location&lt;/title&gt;
+      &lt;field ref=&quot;bounding_box&quot;/&gt;
+&lt;/component&gt;</requirements>
+  <home_page>https://github.com/spjenni/mapsRecollect</home_page>
+</epm>
