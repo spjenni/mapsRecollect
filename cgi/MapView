@@ -1,0 +1,115 @@
+######################################################################
+#
+#  Recollect google maps viewer
+#
+#  London School of Hygiene & Tropical Medicine
+#
+######################################################################
+
+use EPrints;
+
+use strict;
+
+my $repo = EPrints->new->current_repository;
+    exit( 0 ) unless( defined $repo );
+
+my $session = new EPrints::Session;
+	exit( 0 ) unless( defined $session );
+
+
+	# get array ref to json eprints 
+	my $ep_with_loc = action_get_json( $repo, $session );
+	my $ep_data = "";
+	
+	
+	my $frag = $repo->xml->create_document_fragment();
+	my $warning_div = $repo->xml->create_element( "div", id=>"map-warning");
+	
+	if($ep_with_loc != 0){
+	
+		# create json string scalar
+		foreach my $ep_id (@$ep_with_loc){
+				$ep_data.=$ep_id;
+		}
+		
+		# Create google map canvas
+		$warning_div->appendChild( $session->html_phrase("cgi/MapView:map_warning"));
+		my $div_outer = $repo->xml->create_element( "div", id=>"map-canvas-frame");
+		my $div_inner = $repo->xml->create_element( "div", id=>"map-canvas");
+		
+		$div_outer->appendChild( $div_inner );
+		$frag->appendChild( $warning_div );
+		$frag->appendChild( $div_outer );
+		
+		$frag->appendChild( $session->make_javascript( 'map_show(' . $ep_data . ')' ));	
+	}
+	else
+	{
+		$warning_div->appendChild( $session->make_text(  "There are currently no data collections that contain location data." ));
+		$frag->appendChild( $warning_div );
+	}
+	
+	my $title_div = $repo->xml->create_element( "div", id=>"map-title");
+    my $title = $repo->html_phrase( "cgi/MapView:title" );
+    $title_div->appendChild($title);
+    
+    $session->build_page( $title_div, $frag, "latest" );
+    $session->send_page();
+
+    $session->terminate;
+
+# called by render to return json array for use by .js
+sub action_get_json
+{
+	my( $repository, $session) = @_;
+
+	my $limit = $repository->{config}->{eprints_loc_limit};
+
+	my $ds = $repository->dataset( "archive" );
+
+	# new search
+	my $search = new EPrints::Search( 
+		session=>$session, 
+		dataset=>$ds );
+	
+	# check if location metadata is present
+	my @filters = (
+		{ meta_fields => [qw( bounding_box_north_edge )], value => "",  match => "SET"},
+    );
+
+	# return eprints recent eprint id and set limit
+	my $list = $ds->search(
+		filters => \@filters,
+		custom_order=>"-eprintid",
+		limit => $limit,
+    	);
+
+    	# check for presence of eprints with bounding box
+    	if (!defined $list or $list->count < 1)
+    	{
+	  return 0;
+    	}
+	
+	# Config slection of fields to be implemented
+	# my $fields_list = $repository->{config}->{map_information_fields};
+
+	# Search for eprints ands use id to create json export object
+	# array data structure for .js 
+	my @eprints_total = (); 
+	push(@eprints_total,"[");
+
+	$list->map(
+		sub {
+			my( $session, $dataset, $eprint ) = @_;
+			push(@eprints_total, $eprint->export( "JSON" ));
+			push(@eprints_total, ",");
+		}
+	);
+	push(@eprints_total,"]");
+
+	# Tidy up the list of eprints
+	$list->dispose();
+
+	# return ref to array
+	return \@eprints_total; 
+}
